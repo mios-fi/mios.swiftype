@@ -26,6 +26,7 @@ namespace Mios.Swiftype {
 
 		public IDescriber FieldParser { get; set; }
 		public string Token { get; set; }
+		public int Retries { get; set; }
 		protected SwiftypeClientBase(string token) {
 			this.Token = token;
 			FieldParser = new ReflectionBasedDescriber();
@@ -41,15 +42,21 @@ namespace Mios.Swiftype {
 			if(payload!=null) {
 				request.Content = new StringContent(encodedPayload, Encoding.UTF8, "application/json");
 			}
-			var response = await new HttpClient().SendAsync(request);
-			var responseContent = await response.Content.ReadAsStringAsync();
-			if(response.IsSuccessStatusCode) 
-				return JsonConvert.DeserializeObject<TResponse>(responseContent, deserializingSettings);
-
+			
+			var retriesLeft = Retries;
+			HttpResponseMessage response = null;
+			while(retriesLeft-- >= 0) {
+				response = await new HttpClient().SendAsync(request);
+				if(response.IsSuccessStatusCode) {
+					var responseContent = await response.Content.ReadAsStringAsync();
+					return JsonConvert.DeserializeObject<TResponse>(responseContent, deserializingSettings);
+				}
+			}
+			var errorContent = await response.Content.ReadAsStringAsync();
 			if(response.Content.Headers.ContentType.MediaType == "application/json") 
-				throw new SwiftypeClientException(JsonConvert.DeserializeObject<SwiftypeErrorResponse>(responseContent, deserializingSettings));
+				throw new SwiftypeClientException(JsonConvert.DeserializeObject<SwiftypeErrorResponse>(errorContent, deserializingSettings));
 
-			throw new SwiftypeClientException(responseContent);
+			throw new SwiftypeClientException(errorContent);
 		}
 
 		public struct SwiftypeErrorResponse {
