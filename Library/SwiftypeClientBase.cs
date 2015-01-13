@@ -19,6 +19,7 @@ namespace Mios.Swiftype {
 			ContractResolver = new ToSnakeCaseContractResolver(),
 			Converters = {
 				new DocumentResponseConverter(),
+				new DocumentTypeResponseConverter(),
 				new QueryResultConverter(),
 			}
 		};
