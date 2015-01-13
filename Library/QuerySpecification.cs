@@ -9,6 +9,7 @@ namespace Mios.Swiftype {
 		public string Q { get; set; }
 		public int Page { get; set; }
 		public int? PerPage { get; set; }
+		public string[] DocumentTypes { get; set; }
 		public IDictionary<string, FilterCollection> Filters { get; set; }
 		public IDictionary<string, IEnumerable<string>> SearchFields { get; set; }
 		public IDictionary<string, IEnumerable<string>> FetchFields { get; set; }
