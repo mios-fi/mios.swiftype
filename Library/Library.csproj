@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="DocumentCollection.cs" />
     <Compile Include="DocumentResponse.cs" />
+    <Compile Include="QueryResponseConverter.cs" />
     <Compile Include="DocumentResponseConverter.cs" />
     <Compile Include="DocumentType.cs" />
     <Compile Include="DocumentTypeCollection.cs" />

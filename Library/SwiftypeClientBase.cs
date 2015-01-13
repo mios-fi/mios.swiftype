@@ -18,7 +18,8 @@ namespace Mios.Swiftype {
 		private static readonly JsonSerializerSettings deserializingSettings = new JsonSerializerSettings {
 			ContractResolver = new ToSnakeCaseContractResolver(),
 			Converters = {
-				new DocumentResponseConverter()
+				new DocumentResponseConverter(),
+				new QueryResultConverter(),
 			}
 		};
 
